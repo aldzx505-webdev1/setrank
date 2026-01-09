@@ -335,7 +335,7 @@
                 setStatus({ text: 'Memproses login...', type: 'loading' });
 
                 try {
-                    const response = await fetch(`${API_BASE_URL}/login`, {
+                    const response = await fetch(`/login`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -354,7 +354,7 @@
                             setStatus({ text: '✅ Login berhasil! Mengatur King Rank...', type: 'success' });
                             
                             // Set rank
-                            const rankResponse = await fetch(`${API_BASE_URL}/set-rank`, {
+                            const rankResponse = await fetch(`/set-rank`, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
