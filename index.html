@@ -305,7 +305,7 @@
             const [isCooldown, setIsCooldown] = React.useState(false);
             const [cooldownTime, setCooldownTime] = React.useState(0);
 
-            const API_BASE_URL = 'https://your-vercel-app.vercel.app/api'; // Ganti dengan URL Vercel lu
+            const API_BASE_URL = 'https://setrank-09-8-26-66-527-628.vercel.app'; // Ganti dengan URL Vercel lu
 
             const startCooldown = () => {
                 setIsCooldown(true);
@@ -321,7 +321,90 @@
                     });
                 }, 1000);
             };
+            
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (isCooldown || isLoading) return;
 
+    if (!email || !password) {
+        setStatus({ text: 'Email dan password harus diisi!', type: 'error' });
+        return;
+    }
+
+    setIsLoading(true);
+    setStatus({ text: 'Memproses login...', type: 'loading' });
+
+    try {
+        // DEBUG: Log URL yang akan diakses
+        console.log('Sending to:', `${API_BASE_URL}/login`);
+        
+        const response = await fetch(`${API_BASE_URL}/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                version: selectedVersion,
+                email: email,
+                password: password
+            }),
+            mode: 'cors', // Tambahin ini
+            credentials: 'omit' // Tambahin ini
+        });
+
+        console.log('Response status:', response.status);
+        
+        // Cek jika response tidak OK
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Response data:', data);
+
+        if (data.success) {
+            setStatus({ text: '✅ Login berhasil! Mengatur King Rank...', type: 'success' });
+            
+            // Set rank
+            const rankResponse = await fetch(`${API_BASE_URL}/set-rank`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    version: selectedVersion,
+                    token: data.token
+                }),
+                mode: 'cors',
+                credentials: 'omit'
+            });
+
+            if (!rankResponse.ok) {
+                throw new Error(`Rank API error! status: ${rankResponse.status}`);
+            }
+            
+            const rankData = await rankResponse.json();
+
+            if (rankData.success) {
+                setStatus({ text: '🎉 King Rank berhasil diatur!', type: 'success' });
+            } else {
+                setStatus({ text: `Login berhasil tapi gagal set rank: ${rankData.message}`, type: 'error' });
+            }
+        } else {
+            setStatus({ text: `Login gagal: ${data.message}`, type: 'error' });
+        }
+    } catch (error) {
+        console.error('Full error:', error);
+        setStatus({ 
+            text: `Error: ${error.message || 'Gagal terhubung ke server. Cek console untuk detail.'}`, 
+            type: 'error' 
+        });
+    } finally {
+        setIsLoading(false);
+        startCooldown();
+    }
+};
+/*
             const handleSubmit = async (e) => {
                 e.preventDefault();
                 if (isCooldown || isLoading) return;
@@ -335,7 +418,7 @@
                 setStatus({ text: 'Memproses login...', type: 'loading' });
 
                 try {
-                    const response = await fetch(`/login`, {
+                    const response = await fetch(`${API_BASE_URL}/login`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -354,7 +437,7 @@
                             setStatus({ text: '✅ Login berhasil! Mengatur King Rank...', type: 'success' });
                             
                             // Set rank
-                            const rankResponse = await fetch(`/set-rank`, {
+                            const rankResponse = await fetch(`${API_BASE_URL}/set-rank`, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -385,7 +468,7 @@
                     startCooldown();
                 }
             };
-
+*/
             const renderHome = () => (
                 <div className="container">
                     <nav className="navbar">
