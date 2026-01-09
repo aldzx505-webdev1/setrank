@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            overflow-x: hidden;
+            color: #f8fafc;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Floating 3D Objects */
+        .floating-objects {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .object {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float 20s infinite linear;
+            filter: blur(0.5px);
+        }
+
+        .obj1 {
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle at 30% 30%, #3b82f6, transparent 70%);
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .obj2 {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 70% 20%, #8b5cf6, transparent 70%);
+            top: 70%;
+            left: 85%;
+            animation-delay: -5s;
+        }
+
+        .obj3 {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle at 50% 50%, #10b981, transparent 70%);
+            top: 20%;
+            left: 80%;
+            animation-delay: -10s;
+        }
+
+        .obj4 {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle at 40% 60%, #f59e0b, transparent 70%);
+            top: 80%;
+            left: 15%;
+            animation-delay: -15s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg) scale(1);
+            }
+            25% {
+                transform: translateY(-40px) rotate(90deg) scale(1.1);
+            }
+            50% {
+                transform: translateY(20px) rotate(180deg) scale(0.9);
+            }
+            75% {
+                transform: translateY(-30px) rotate(270deg) scale(1.05);
+            }
+        }
+
+        /* 3D Card */
+        .card-3d {
+            position: relative;
+            width: 90%;
+            max-width: 700px;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 50px 40px;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
+            animation: cardFloat 8s ease-in-out infinite;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        @keyframes cardFloat {
+            0%, 100% {
+                transform: translateY(0) rotateX(0) rotateY(0);
+            }
+            33% {
+                transform: translateY(-15px) rotateX(2deg) rotateY(1deg);
+            }
+            66% {
+                transform: translateY(10px) rotateX(-1deg) rotateY(-1deg);
+            }
+        }
+
+        .card-3d::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6, #10b981, #f59e0b);
+            border-radius: 34px;
+            z-index: -1;
+            filter: blur(20px);
+            opacity: 0.4;
+            animation: borderGlow 6s linear infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% {
+                opacity: 0.4;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        /* Content */
+        .content {
+            text-align: center;
+            transform: translateZ(50px);
+        }
+
+        .status-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+            color: #f87171;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .status-text {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #60a5fa;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-bottom: 25px;
+            background: linear-gradient(to right, #f8fafc, #cbd5e1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+
+        .message {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Button */
+        .telegram-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #0088cc, #005c8a);
+            color: white;
+            border: none;
+            padding: 18px 36px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 16px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 136, 204, 0.3);
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .telegram-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 136, 204, 0.4);
+        }
+
+        .telegram-btn:active {
+            transform: translateY(0) scale(1);
+        }
+
+        .telegram-btn i {
+            font-size: 24px;
+        }
+
+        .telegram-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+        }
+
+        .telegram-btn:hover::after {
+            left: 120%;
+        }
+
+        /* Particles */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: particleMove 15s infinite linear;
+        }
+
+        @keyframes particleMove {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .card-3d {
+                padding: 40px 25px;
+                border-radius: 24px;
+            }
+            
+            h1 {
+                font-size: 32px;
+            }
+            
+            .status-icon {
+                font-size: 60px;
+            }
+            
+            .telegram-btn {
+                padding: 16px 28px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Floating 3D Objects -->
+        <div class="floating-objects">
+            <div class="object obj1"></div>
+            <div class="object obj2"></div>
+            <div class="object obj3"></div>
+            <div class="object obj4"></div>
+        </div>
+        
+        <!-- Particles -->
+        <div class="particles" id="particles"></div>
+        
+        <!-- 3D Card -->
+        <div class="card-3d">
+            <div class="content">
+                <div class="status-icon">
+                    <i class="fas fa-server"></i>
+                </div>
+                
+                <div class="status-text">Server Status</div>
+                
+                <h1>Sorry, the server is currently offline or under maintenance.</h1>
+                
+                <p class="message">
+                    Please wait until it is reopened or you receive information from the admin. 
+                    Our team is working hard to restore services as quickly as possible. 
+                    Thank you for your patience.
+                </p>
+                
+                <a href="https://t.me/ScolariOfficial" target="_blank" class="telegram-btn">
+                    <i class="fab fa-telegram-plane"></i>
+                    <span>Chat Contact Owner</span>
+                </a>
+                
+                <div style="margin-top: 30px; font-size: 14px; color: #94a3b8;">
+                    <i class="fas fa-info-circle"></i> 
+                    Click button above to contact via Telegram
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generate particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size
+                const size = Math.random() * 4 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}vw`;
+                
+                // Random animation delay
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                
+                // Random color
+                const colors = [
+                    'rgba(59, 130, 246, 0.5)',
+                    'rgba(139, 92, 246, 0.5)',
+                    'rgba(16, 185, 129, 0.5)',
+                    'rgba(245, 158, 11, 0.5)'
+                ];
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Mouse move 3D effect
+        document.addEventListener('mousemove', (e) => {
+            const card = document.querySelector('.card-3d');
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+            
+            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+        
+        // Mouse leave reset
+        document.querySelector('.container').addEventListener('mouseleave', () => {
+            const card = document.querySelector('.card-3d');
+            card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+        });
+        
+        // Initialize
+        createParticles();
+        
+        // Animate floating objects on scroll
+        window.addEventListener('scroll', () => {
+            const objects = document.querySelectorAll('.object');
+            const scrollY = window.scrollY;
+            
+            objects.forEach((obj, index) => {
+                const speed = 0.2 + (index * 0.1);
+                obj.style.transform = `translateY(${scrollY * speed}px)`;
+            });
+        });
+        
+        // Button hover effect enhancement
+        const telegramBtn = document.querySelector('.telegram-btn');
+        
+        telegramBtn.addEventListener('mouseenter', () => {
+            telegramBtn.style.background = 'linear-gradient(135deg, #00a2ff, #0077b6)';
+        });
+        
+        telegramBtn.addEventListener('mouseleave', () => {
+            telegramBtn.style.background = 'linear-gradient(135deg, #0088cc, #005c8a)';
+        });
+    </script>
+</body>
+</html>
